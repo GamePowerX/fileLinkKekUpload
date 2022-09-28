@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <script defer src="management.js" type="module"></script>
+    </head>
+    <body>
+        <form>
+            <p>To be able to upload files to KekUpload, you need to enter the information of your KekUpload Instance:</p>
+            <p>Instance URL: <input type="text" name="instanceUrl" id="instanceUrl" value="https://yourinstance.com"></p>
+            <p>Upload With FileName: <input type="checkbox" name="uploadWithFileName" id="uploadWithFileName" checked="true"></p>
+            <p>Chunk Size: <input type="number" name="chunkSize" id="chunkSize" value="2097152"></p>
+            <div style="text-align: right"><button type="button" name="save" id="save">Save</button></div>
+        </form>
+    </body>
+</html>
