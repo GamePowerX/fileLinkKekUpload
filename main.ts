@@ -7,6 +7,7 @@ async function getSettings(accountId: string) {
 }
 
 browser.cloudFile.onFileUpload.addListener(async (account: browser.cloudFile.CloudFileAccount, fileInfo: browser.cloudFile.CloudFile) => {
+    console.log("onFileUpload");
     let settings = await getSettings(account.id);
     let uploader = new FileUploader({read_size: 1024*1024*32, chunk_size: settings.chunkSize, api: settings.instanceUrl});
     let fileName = "";

@@ -6,6 +6,9 @@ let button = document.getElementById("save") as HTMLButtonElement;
 if(typeof accountId === "string" && accountId) {
     let id = accountId as string;
     browser.storage.local.get([id]).then(accountInfo => {
+        if(typeof accountInfo === "undefined") {
+            return;
+        }
         instanceUrl.value = accountInfo[id].instanceUrl;
         withFileName.checked = accountInfo[id].withFileName;
         chunkSize.value = accountInfo[id].chunkSize.toString();
@@ -23,6 +26,7 @@ if(typeof accountId === "string" && accountId) {
         });
         setTimeout(() => {
             instanceUrl.disabled = withFileName.disabled = chunkSize.disabled = button.disabled = false;
+            browser.cloudFile.updateAccount(id, {configured: true});
         }, Math.max(0, start + 500 - Date.now()));
     };
 }
