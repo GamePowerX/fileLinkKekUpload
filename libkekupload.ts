@@ -58,10 +58,11 @@ export class KekUploadAPI {
 
 	async create(ext: string, name: string): Promise<{ stream: string }> {
 		if(name === undefined) {
-	
-		return await this.req("POST", `c/${ext}`, null, this.handlej, this.handlej);
+			console.log("sending create request without name");
+			return await this.req("POST", `c/${ext}`, null, this.handlej, this.handlej);
 		} else {
-		return await this.req("POST", `c/${ext}/${name}`, null, this.handlej, this.handlej);
+			console.log("sending create request with name");
+			return await this.req("POST", `c/${ext}/${name}`, null, this.handlej, this.handlej);
 		}
 	}
 

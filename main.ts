@@ -14,22 +14,33 @@ browser.cloudFile.onFileUpload.addListener(async (account: browser.cloudFile.Clo
     let name = "";
     let ext = "";
     if(fileInfo.data instanceof File) {
+        fileName = fileInfo.data.name;
+        console.log("File");
         ext = fileName.split('.').pop() as string;
-        name = fileName.split('.').slice(0, -1).at(0) as string;
+        console.log("Extension:" + ext);
+        name = fileName.replace('.' + ext, '');
+        console.log("Name:" + name);
     }else{
+        console.log("Blob");
         name = fileInfo.name;
     }
-    
-    await uploader.begin(ext, name)
-    if(fileInfo.data instanceof File) {
-        await uploader.upload_file(fileInfo.data, onProgress);
-    }else {
-        let blob = new Blob([fileInfo.data], {type: "application/octet-stream"});
-        let file = new File([blob], fileName, {type: "application/octet-stream"});
-        await uploader.upload_file(file, onProgress);
+    console.log("uploading " + name + " to " + settings.instanceUrl);
+    try {
+        await uploader.begin(ext, name)
+        if(fileInfo.data instanceof File) {
+            await uploader.upload_file(fileInfo.data, onProgress);
+        }else {
+            let blob = new Blob([fileInfo.data], {type: "application/octet-stream"});
+            let file = new File([blob], fileName, {type: "application/octet-stream"});
+            await uploader.upload_file(file, onProgress);
+        }
+        console.log("sending finish request");
+        let url = await uploader.finish();
+        return {url: settings.instanceUrl + "/" + url.id};
+    } catch (error) {
+        console.log(error);
     }
-    let url = await uploader.finish();
-    return {url: settings.instanceUrl + "/" + url.id};
+    return undefined;
 });
 
 browser.cloudFile.onFileUploadAbort.addListener(() => {
