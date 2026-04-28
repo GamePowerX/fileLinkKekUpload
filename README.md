@@ -14,18 +14,37 @@ A Thunderbird FileLink extension for uploading email attachments to a KekUpload 
 Install the project dependencies from a fresh checkout:
 
 ```sh
-yarn install
+yarn install --frozen-lockfile
 ```
 
 ## Build
 
-Build the extension into the `dist` directory:
+Build the extension from source into the `dist` directory:
 
 ```sh
 yarn build
 ```
 
-The build compiles the TypeScript sources, copies the extension HTML and manifest files, and bundles the background script with Browserify.
+The build runs these steps:
+
+1. Remove the previous `dist` directory.
+2. Compile TypeScript with `tsc -p .` into `dist`.
+3. Copy only the extension package assets: `management.html`, `icon-48.png`, `icon-96.png`, and `manifest.json`.
+4. Bundle `dist/main.js` with Browserify so the published package contains the required dependencies.
+
+Validate the built extension:
+
+```sh
+yarn web-ext lint -s dist
+```
+
+Create a package for submission or local installation:
+
+```sh
+yarn web-ext build -s dist -a web-ext-artifacts --overwrite-dest
+```
+
+For source review, use Node.js 20 or newer with Yarn 1.22.22 and run the commands above from a clean checkout. The `yarn.lock` file is required so reviewers install the same dependency versions.
 
 ## Load In Thunderbird
 
@@ -40,9 +59,11 @@ The build compiles the TypeScript sources, copies the extension HTML and manifes
 
 After loading the extension, add or configure the FileLink account in Thunderbird and set:
 
-- KekUpload instance URL
-- Upload chunk size
-- Whether uploads should include the original file name
+- KekUpload instance URL. Use the server root URL, not an `/api` URL.
+- Upload chunk size in bytes.
+- Whether uploads should include the original file name.
+
+Finished uploads cannot be deleted by this extension. Remove files directly from the configured KekUpload server manually.
 
 ## Development
 

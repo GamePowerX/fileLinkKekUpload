@@ -11,7 +11,25 @@ type UploadState = {
   aborted: boolean;
 };
 
+const MAX_CHUNK_SIZE = 32 * 1024 * 1024;
+
 let activeUploads = new Map<string, UploadState>();
+let debugLogging = false;
+
+if (browser.management?.getSelf) {
+  browser.management
+    .getSelf()
+    .then((info) => {
+      debugLogging = info.installType === "development";
+    })
+    .catch(() => undefined);
+}
+
+function debugLog(...args: unknown[]) {
+  if (debugLogging) {
+    console.log("[FileLinkKekUpload]", ...args);
+  }
+}
 
 async function getSettings(accountId: string) {
   let settings = await browser.storage.local.get([accountId]);
@@ -100,8 +118,14 @@ function getErrorMessage(error: unknown) {
 }
 
 function validateChunkSize(chunkSize: number) {
-  if (!Number.isSafeInteger(chunkSize) || chunkSize < 1) {
-    throw new Error("Upload chunk size must be a positive whole number.");
+  if (
+    !Number.isSafeInteger(chunkSize) ||
+    chunkSize < 1 ||
+    chunkSize > MAX_CHUNK_SIZE
+  ) {
+    throw new Error(
+      `Upload chunk size must be a positive whole number no larger than ${MAX_CHUNK_SIZE} bytes.`,
+    );
   }
 }
 
@@ -136,27 +160,32 @@ browser.cloudFile.onFileUpload.addListener(
 
       await uploader.begin(ext, uploadName);
       if (state.aborted) {
+        debugLog("Upload aborted before file data was sent", fileInfo.id);
         await uploader.destroy().catch(() => undefined);
         return { aborted: true };
       }
 
       await uploader.upload_file(file, () => undefined);
       if (state.aborted) {
+        debugLog("Upload aborted after file data was sent", fileInfo.id);
         await uploader.destroy().catch(() => undefined);
         return { aborted: true };
       }
 
       let url = await uploader.finish();
       if (state.aborted) {
+        debugLog("Upload aborted after finish request", fileInfo.id);
         return { aborted: true };
       }
 
       return { url: new URL(url.id, baseUrl).href };
     } catch (error) {
       if (activeUploads.get(uploadKey)?.aborted || error === "CANCELLED") {
+        debugLog("Upload cancelled", fileInfo.id);
         return { aborted: true };
       }
 
+      debugLog("Upload failed", error);
       return { error: getErrorMessage(error) };
     } finally {
       activeUploads.delete(uploadKey);
@@ -171,6 +200,7 @@ browser.cloudFile.onFileUploadAbort.addListener((account, fileId) => {
   }
 
   state.aborted = true;
+  debugLog("Abort requested", fileId);
   state.uploader
     .cancel()
     .catch(() => state.uploader.destroy().catch(() => undefined));

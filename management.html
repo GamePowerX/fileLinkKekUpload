@@ -198,7 +198,9 @@
               value="https://yourinstance.com"
               placeholder="https://upload.example.com"
             />
-            <p class="hint">The base URL of your KekUpload server.</p>
+            <p class="hint">
+              The root URL of your KekUpload server. Do not add /api.
+            </p>
           </div>
         </div>
 
@@ -226,9 +228,12 @@
               id="chunkSize"
               value="2097152"
               min="1"
+              max="33554432"
               step="1"
             />
-            <p class="hint">Number of bytes sent per upload chunk.</p>
+            <p class="hint">
+              Number of bytes sent per upload chunk, up to 33554432 bytes.
+            </p>
           </div>
         </div>
 

@@ -12,6 +12,8 @@ type AccountSettings = {
   chunkSize: number;
 };
 
+const MAX_CHUNK_SIZE = 32 * 1024 * 1024;
+
 function isLocalhost(hostname: string) {
   let normalized = hostname.toLowerCase();
   return normalized === "localhost" || normalized === "127.0.0.1";
@@ -48,9 +50,16 @@ function normalizeInstanceUrl(value: string) {
 }
 
 function getValidatedChunkSize() {
-  let parsed = Number(chunkSize.value);
-  if (!Number.isSafeInteger(parsed) || parsed < 1) {
-    throw new Error("Chunk size must be a positive whole number.");
+  let value = chunkSize.value.trim();
+  if (!/^[1-9]\d*$/.test(value)) {
+    throw new Error("Chunk size must be a positive whole number in bytes.");
+  }
+
+  let parsed = Number.parseInt(value, 10);
+  if (!Number.isSafeInteger(parsed) || parsed > MAX_CHUNK_SIZE) {
+    throw new Error(
+      `Chunk size must be no larger than ${MAX_CHUNK_SIZE} bytes.`,
+    );
   }
 
   return parsed;
