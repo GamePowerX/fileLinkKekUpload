@@ -41,8 +41,10 @@ yarn web-ext lint -s dist
 Create a package for submission or local installation:
 
 ```sh
-yarn web-ext build -s dist -a web-ext-artifacts --overwrite-dest
+yarn package
 ```
+
+This command compiles the extension and creates an XPI file in the `web-ext-artifacts` directory. Use `--overwrite-dest` flag to automatically overwrite existing files.
 
 For source review, use Node.js 20 or newer with Yarn 1.22.22 and run the commands above from a clean checkout. The `yarn.lock` file is required so reviewers install the same dependency versions.
 
