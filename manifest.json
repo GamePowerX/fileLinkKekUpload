@@ -21,5 +21,10 @@
     "name": "FileLinkKekUpload",
     "management_url": "management.html"
   },
-  "permissions": ["storage", "<all_urls>"]
+  "permissions": [
+    "storage",
+    "https://*/*",
+    "http://localhost/*",
+    "http://127.0.0.1/*"
+  ]
 }
