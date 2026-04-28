@@ -31,8 +31,8 @@
   "scripts": {
     "build": "yarn compile",
     "prepublishOnly": "yarn compile",
-    "compile": "yarn clean && tsc -p . && cp *.html dist && cp manifest.json dist && browserify ./dist/main.js -o ./main.js && rm ./dist/main.js && mv ./main.js ./dist/main.js",
-    "compileWin": "yarn cleanWin && tsc -p . && copy management.html .\\dist && copy settings.html .\\dist && copy manifest.json .\\dist && browserify ./dist/main.js -o ./main.js && del .\\dist\\main.js && move .\\main.js .\\dist\\main.js",
+    "compile": "yarn clean && tsc -p . && cp *.html *.png dist && cp manifest.json dist && browserify ./dist/main.js -o ./main.js && rm ./dist/main.js && mv ./main.js ./dist/main.js",
+    "compileWin": "yarn cleanWin && tsc -p . && copy *.html .\\dist && copy *.png .\\dist && copy manifest.json .\\dist && browserify ./dist/main.js -o ./main.js && del .\\dist\\main.js && move .\\main.js .\\dist\\main.js",
     "watch": "tsc -w -p .",
     "clean": "rm -rf dist",
     "cleanWin": "del /Q /S /F dist && rmdir dist",
