@@ -36,6 +36,7 @@
     "watch": "tsc -w -p .",
     "clean": "rm -rf dist",
     "cleanWin": "del /Q /S /F dist && rmdir dist",
-    "format": "prettier --ignore-path .gitignore --write ."
+    "format": "prettier --ignore-path .gitignore --write .",
+    "package": "yarn compile && web-ext build --source-dir=./dist --overwrite-dest"
   }
 }
