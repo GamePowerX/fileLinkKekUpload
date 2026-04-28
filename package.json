@@ -11,7 +11,8 @@
     "kekupload"
   ],
   "dependencies": {
-    "crypto-js": "^4.2.0"
+    "crypto-js": "^4.2.0",
+    "kekupload-lib-ts": "^2.0.3"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^29.0.2",

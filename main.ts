@@ -1,5 +1,5 @@
-import { FileUploader } from "./libkekupload";
-import { FileUploaderOptions } from "./libkekupload";
+import { FileUploader } from "kekupload-lib-ts";
+import { FileUploaderOptions } from "kekupload-lib-ts";
 
 async function getSettings(accountId: string) {
   let settings = await browser.storage.local.get([accountId]);
