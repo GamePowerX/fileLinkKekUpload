@@ -5,15 +5,22 @@ let withFileName = document.getElementById(
 let chunkSize = document.getElementById("chunkSize") as HTMLInputElement;
 let accountId = new URL(location.href).searchParams.get("accountId");
 let button = document.getElementById("save") as HTMLButtonElement;
+type AccountSettings = {
+  instanceUrl: string;
+  withFileName: boolean;
+  chunkSize: number;
+};
+
 if (typeof accountId === "string" && accountId) {
   let id = accountId as string;
   browser.storage.local.get([id]).then((accountInfo) => {
-    if (typeof accountInfo === "undefined") {
+    let settings = accountInfo[id] as AccountSettings | undefined;
+    if (!settings) {
       return;
     }
-    instanceUrl.value = accountInfo[id].instanceUrl;
-    withFileName.checked = accountInfo[id].withFileName;
-    chunkSize.value = accountInfo[id].chunkSize.toString();
+    instanceUrl.value = settings.instanceUrl;
+    withFileName.checked = settings.withFileName;
+    chunkSize.value = settings.chunkSize.toString();
   });
 
   button.onclick = async () => {

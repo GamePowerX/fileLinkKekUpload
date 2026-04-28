@@ -1,9 +1,18 @@
-import { FileUploader } from "kekupload-lib-ts";
-import { FileUploaderOptions } from "kekupload-lib-ts";
+import { FileUploader, KekUploadAPI } from "kekupload-lib-ts";
+
+type AccountSettings = {
+  instanceUrl: string;
+  withFileName: boolean;
+  chunkSize: number;
+};
 
 async function getSettings(accountId: string) {
   let settings = await browser.storage.local.get([accountId]);
-  return settings[accountId];
+  return settings[accountId] as AccountSettings | undefined;
+}
+
+function getBaseUrl(instanceUrl: string) {
+  return instanceUrl.endsWith("/") ? instanceUrl : `${instanceUrl}/`;
 }
 
 browser.cloudFile.onFileUpload.addListener(
@@ -13,10 +22,13 @@ browser.cloudFile.onFileUpload.addListener(
   ) => {
     console.log("onFileUpload");
     let settings = await getSettings(account.id);
+    if (!settings) {
+      throw new Error("FileLinkKekUpload account is not configured");
+    }
     let uploader = new FileUploader({
       read_size: 1024 * 1024 * 32,
       chunk_size: settings.chunkSize,
-      api: settings.instanceUrl,
+      api: new KekUploadAPI(getBaseUrl(settings.instanceUrl)),
     });
     let fileName = "";
     let name = "";
