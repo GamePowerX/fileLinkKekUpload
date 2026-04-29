@@ -8,7 +8,7 @@ A Thunderbird FileLink extension for uploading email attachments to a KekUpload 
 
 - Node.js 20 or newer
 - Yarn 1.22 or newer
-- Thunderbird 78 or newer
+- Thunderbird 128 or newer
 - Access to a KekUpload-compatible server
 
 ## Install
