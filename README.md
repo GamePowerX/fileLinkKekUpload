@@ -1,5 +1,7 @@
 # FileLinkKekUpload
 
+![FileLinkKekUpload icon](icon.png)
+
 A Thunderbird FileLink extension for uploading email attachments to a KekUpload instance.
 
 ## Requirements
